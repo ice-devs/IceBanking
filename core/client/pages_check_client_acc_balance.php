@@ -279,7 +279,10 @@ $client_id = $_SESSION['client_id'];
         </aside>
         <!-- /.control-sidebar -->
     </div>
-    <!-- ./wrapper -->
+      <!-- ./wrapper -->
+
+  <!-- REQUIRED SCRIPTS -->
+  <script src="dist/js/script.js"></script>
     
     <script src="dist/js/script.js"></script>
     <!-- jQuery -->

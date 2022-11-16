@@ -195,7 +195,10 @@ if (isset($_POST['create_staff_account'])) {
         </aside>
         <!-- /.control-sidebar -->
     </div>
-    <!-- ./wrapper -->
+      <!-- ./wrapper -->
+
+  <!-- REQUIRED SCRIPTS -->
+  <script src="dist/js/script.js"></script>
 
     <!-- jQuery -->
     <script src="plugins/jquery/jquery.min.js"></script>

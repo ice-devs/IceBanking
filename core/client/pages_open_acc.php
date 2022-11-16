@@ -240,7 +240,10 @@ if (isset($_POST['open_account'])) {
         <!-- Control Sidebar -->
         <!-- /.control-sidebar -->
     </div>
-    <!-- ./wrapper -->
+      <!-- ./wrapper -->
+
+  <!-- REQUIRED SCRIPTS -->
+  <script src="dist/js/script.js"></script>
     <!-- REQUIRED SCRIPTS -->
     <script src="dist/js/script.js"></script>
     <!-- jQuery -->

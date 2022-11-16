@@ -459,7 +459,10 @@ $stmt->close();
     <?php include("dist/_partials/footer.php"); ?>
 
   </div>
-  <!-- ./wrapper -->
+    <!-- ./wrapper -->
+
+  <!-- REQUIRED SCRIPTS -->
+  <script src="dist/js/script.js"></script>
 
   <!-- REQUIRED SCRIPTS -->
   <!-- jQuery -->

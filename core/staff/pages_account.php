@@ -340,7 +340,10 @@ if (isset($_POST['change_staff_password'])) {
         </aside>
         <!-- /.control-sidebar -->
     </div>
-    <!-- ./wrapper -->
+      <!-- ./wrapper -->
+
+  <!-- REQUIRED SCRIPTS -->
+  <script src="dist/js/script.js"></script>
 
     <!-- jQuery -->
     <script src="plugins/jquery/jquery.min.js"></script>

@@ -333,7 +333,10 @@ $stmt->close();
     <!-- Main Footer -->
 
   </div>
-  <!-- ./wrapper -->
+    <!-- ./wrapper -->
+
+  <!-- REQUIRED SCRIPTS -->
+  <script src="dist/js/script.js"></script>
 
   <!-- REQUIRED SCRIPTS -->
   <script src="dist/js/script.js"></script>
