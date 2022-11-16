@@ -103,21 +103,57 @@ $stmt->close();
 
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<style>
+  .bars {
+    height: 100%; /* 100% Full-height */
+    width: 0px; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: rgb(30, 9, 31); /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    /* padding-top: 60px; Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */    
+  }
+
+  /* Position and style the close button (top right corner) */
+  .closebtn {
+    position: absolute;
+    top: 0px;
+    right: 8%;
+    font-size: 36px;
+    margin-left: 30px;
+  }
+
+  /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+  @media screen and (max-width: 450px) {
+  .nav-link {
+        font-size: 11px;
+    }
+}
+
+</style>
+
+<?php include("dist/_partials/nav.php"); ?>
 <?php include("dist/_partials/head.php"); ?>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 
   <div class="wrapper">
     <!-- Navbar -->
-    <?php include("dist/_partials/nav.php"); ?>
+    
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
     <?php include("dist/_partials/sidebar.php"); ?>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="mainsy" style="margin-left: 0%; ">
+      
+      <button id="openNav"  style="position:fixed; top:0; overflow: hidden; z-index:1; margin:5px; border-radius: 50px 50px;" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
       <!-- Content Header (Page header) -->
       <div class="content-header">
         <div class="container-fluid">
@@ -137,8 +173,9 @@ $stmt->close();
       <!-- /.content-header -->
 
       <!-- Main content -->
-      <section class="content">
+      <section class="content" ">
         <div class="container-fluid">
+          
           <div class="row">
             <!--iBank Deposits -->
             <div class="col-12 col-sm-6 col-md-3">
@@ -147,7 +184,7 @@ $stmt->close();
                 <div class="info-box-content">
                   <span class="info-box-text">Deposits</span>
                   <span class="info-box-number">
-                    Ksh <?php echo $iB_deposits; ?>
+                    $ <?php echo $iB_deposits; ?>
                   </span>
                 </div>
               </div>
@@ -161,7 +198,7 @@ $stmt->close();
 
                 <div class="info-box-content">
                   <span class="info-box-text">Withdrawals</span>
-                  <span class="info-box-number">Ksh <?php echo $iB_withdrawal; ?> </span>
+                  <span class="info-box-number">$ <?php echo $iB_withdrawal; ?> </span>
                 </div>
               </div>
             </div>
@@ -176,7 +213,7 @@ $stmt->close();
                 <span class="info-box-icon bg-success elevation-1"><i class="fas fa-random"></i></span>
                 <div class="info-box-content">
                   <span class="info-box-text">Transfers</span>
-                  <span class="info-box-number">Ksh <?php echo $iB_Transfers; ?></span>
+                  <span class="info-box-number">$ <?php echo $iB_Transfers; ?></span>
                 </div>
               </div>
             </div>
@@ -187,93 +224,15 @@ $stmt->close();
               <div class="info-box mb-3">
                 <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-money-bill-alt"></i></span>
                 <div class="info-box-content">
-                  <span class="info-box-text">Wallet Balance</span>
-                  <span class="info-box-number">Ksh <?php echo $TotalBalInAccount; ?></span>
+                  <span class="info-box-text">Book Balance</span>
+                  <span class="info-box-number">$<?php echo $TotalBalInAccount; ?></span>
                 </div>
               </div>
             </div>
             <!-- ./Balances-->
           </div>
 
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header">
-                  <h5 class="card-title">Advanced Analytics</h5>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                      <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="chart">
-                        <!-- Transaction Donought chart Canvas -->
-                        <div id="PieChart" class="col-md-6" style="height: 400px; max-width: 500px; margin: 0px auto;"></div>
-                      </div>
-                      <!-- /.chart-responsive -->
-                    </div>
-                    <hr>
-                    <div class="col-md-6">
-                      <div class="chart">
-                        <div id="AccountsPerAccountCategories" class="col-md-6" style="height: 400px; max-width: 500px; margin: 0px auto;"></div>
-                      </div>
-                      <!-- /.chart-responsive -->
-                    </div>
 
-                    <!-- /.col -->
-                  </div>
-                  <!-- /.row -->
-                </div>
-                <!-- ./card-body -->
-                <div class="card-footer">
-                  <div class="row">
-                    <div class="col-sm-3 col-6">
-                      <div class="description-block border-right">
-                        <h5 class="description-header">Ksh <?php echo $iB_deposits; ?></h5>
-                        <span class="description-text">TOTAL DEPOSITS</span>
-                      </div>
-                      <!-- /.description-block -->
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-sm-3 col-6">
-                      <div class="description-block border-right">
-                        <h5 class="description-header">Ksh <?php echo $iB_withdrawal; ?></h5>
-                        <span class="description-text">TOTAL WITHDRAWALS</span>
-                      </div>
-                      <!-- /.description-block -->
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-sm-3 col-6">
-                      <div class="description-block border-right">
-                        <h5 class="description-header">Ksh <?php echo $iB_Transfers; ?> </h5>
-                        <span class="description-text">TOTAL TRANSFERS</span>
-                      </div>
-                      <!-- /.description-block -->
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-sm-3 col-6">
-                      <div class="description-block">
-                        <h5 class="description-header">Ksh <?php echo $new_amt; ?> </h5>
-                        <span class="description-text">TOTAL MONEY IN  Account</span>
-                      </div>
-                      <!-- /.description-block -->
-                    </div>
-                  </div>
-                  <!-- /.row -->
-                </div>
-                <!-- /.card-footer -->
-              </div>
-              <!-- /.card -->
-            </div>
-            <!-- /.col -->
-          </div>
           <!-- /.row -->
 
           <!-- Main row -->
@@ -336,7 +295,7 @@ $stmt->close();
                             <td><?php echo $row->tr_code; ?></a></td>
                             <td><?php echo $row->account_number; ?></td>
                             <td><?php echo $alertClass; ?></td>
-                            <td>Ksh <?php echo $row->transaction_amt; ?></td>
+                            <td>USD <?php echo $row->transaction_amt; ?></td>
                             <td><?php echo $row->client_name; ?></td>
                             <td><?php echo date("d-M-Y h:m:s ", strtotime($transTstamp)); ?></td>
                           </tr>
@@ -363,22 +322,21 @@ $stmt->close();
         <!--/. container-fluid -->
       </section>
       <!-- /.content -->
+    <?php include("index.php"); ?>
+    <?php include("dist/_partials/footer.php"); ?>
     </div>
     <!-- /.content-wrapper -->
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-      <!-- Control sidebar content goes here -->
-    </aside>
+
     <!-- /.control-sidebar -->
 
     <!-- Main Footer -->
-    <?php include("dist/_partials/footer.php"); ?>
 
   </div>
   <!-- ./wrapper -->
 
   <!-- REQUIRED SCRIPTS -->
+  <script src="dist/js/script.js"></script>
   <!-- jQuery -->
   <script src="plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap -->
@@ -406,196 +364,7 @@ $stmt->close();
   <!--Load Canvas JS -->
   <script src="plugins/canvasjs.min.js"></script>
   <!--Load Few Charts-->
-  <script>
-    window.onload = function() {
 
-      var Piechart = new CanvasJS.Chart("PieChart", {
-        exportEnabled: false,
-        animationEnabled: true,
-        title: {
-          text: "Accounts Per Acc Types "
-        },
-        legend: {
-          cursor: "pointer",
-          itemclick: explodePie
-        },
-        data: [{
-          type: "pie",
-          showInLegend: true,
-          toolTipContent: "{name}: <strong>{y}%</strong>",
-          indexLabel: "{name} - {y}%",
-          dataPoints: [{
-              y: <?php
-                  //return total number of accounts opened under savings acc type
-                  $client_id = $_SESSION['client_id'];
-                  $result = "SELECT count(*) FROM iB_bankAccounts WHERE  acc_type ='Savings' AND client_id =? ";
-                  $stmt = $mysqli->prepare($result);
-                  $stmt->bind_param('i', $client_id);
-                  $stmt->execute();
-                  $stmt->bind_result($savings);
-                  $stmt->fetch();
-                  $stmt->close();
-                  echo $savings;
-                  ?>,
-              name: "Savings Acc",
-              exploded: true
-            },
-
-            {
-              y: <?php
-                  //return total number of accounts opened under  Retirement  acc type
-                  $client_id  = $_SESSION['client_id'];
-                  $result = "SELECT count(*) FROM iB_bankAccounts WHERE  acc_type =' Retirement' AND client_id =? ";
-                  $stmt = $mysqli->prepare($result);
-                  $stmt->bind_param('i', $client_id);
-                  $stmt->execute();
-                  $stmt->bind_result($Retirement);
-                  $stmt->fetch();
-                  $stmt->close();
-                  echo $Retirement;
-                  ?>,
-              name: " Retirement Acc",
-              exploded: true
-            },
-
-            {
-              y: <?php
-                  //return total number of accounts opened under  Recurring deposit  acc type
-                  $client_id  = $_SESSION['client_id'];
-                  $result = "SELECT count(*) FROM iB_bankAccounts WHERE  acc_type ='Recurring deposit' AND client_id =? ";
-                  $stmt = $mysqli->prepare($result);
-                  $stmt->bind_param('i', $client_id);
-                  $stmt->execute();
-                  $stmt->bind_result($Recurring);
-                  $stmt->fetch();
-                  $stmt->close();
-                  echo $Recurring;
-                  ?>,
-              name: "Recurring deposit Acc ",
-              exploded: true
-            },
-
-            {
-              y: <?php
-                  //return total number of accounts opened under  Fixed Deposit Account deposit  acc type
-                  $client_id  = $_SESSION['client_id'];
-                  $result = "SELECT count(*) FROM iB_bankAccounts WHERE  acc_type ='Fixed Deposit Account' AND client_id = ? ";
-                  $stmt = $mysqli->prepare($result);
-                  $stmt->bind_param('i', $client_id);
-                  $stmt->execute();
-                  $stmt->bind_result($Fixed);
-                  $stmt->fetch();
-                  $stmt->close();
-                  echo $Fixed;
-                  ?>,
-              name: "Fixed Deposit Acc",
-              exploded: true
-            },
-
-            {
-              y: <?php
-
-                  //return total number of accounts opened under  Current account deposit  acc type
-                  $client_id  = $_SESSION['client_id'];
-                  $result = "SELECT count(*) FROM iB_bankAccounts WHERE  acc_type ='Current account' AND client_id =? ";
-                  $stmt = $mysqli->prepare($result);
-                  $stmt->bind_param('i', $client_id);
-                  $stmt->execute();
-                  $stmt->bind_result($Current);
-                  $stmt->fetch();
-                  $stmt->close();
-                  echo $Current;
-                  ?>,
-              name: "Current Acc",
-              exploded: true
-            }
-          ]
-        }]
-      });
-
-      var AccChart = new CanvasJS.Chart("AccountsPerAccountCategories", {
-        exportEnabled: false,
-        animationEnabled: true,
-        title: {
-          text: "Transactions"
-        },
-        legend: {
-          cursor: "pointer",
-          itemclick: explodePie
-        },
-        data: [{
-          type: "pie",
-          showInLegend: true,
-          toolTipContent: "{name}: <strong>{y}%</strong>",
-          indexLabel: "{name} - {y}%",
-          dataPoints: [{
-              y: <?php
-                  //return total number of transactions under  Withdrawals
-                  $client_id  = $_SESSION['client_id'];
-                  $result = "SELECT count(*) FROM iB_Transactions WHERE  tr_type ='Withdrawal' AND client_id =? ";
-                  $stmt = $mysqli->prepare($result);
-                  $stmt->bind_param('i', $client_id);
-                  $stmt->execute();
-                  $stmt->bind_result($Withdrawals);
-                  $stmt->fetch();
-                  $stmt->close();
-                  echo $Withdrawals;
-                  ?>,
-              name: "Withdrawals",
-              exploded: true
-            },
-
-            {
-              y: <?php
-                  //return total number of transactions under  Deposits
-                  $client_id  = $_SESSION['client_id'];
-                  $result = "SELECT count(*) FROM iB_Transactions WHERE  tr_type ='Deposit' AND client_id =? ";
-                  $stmt = $mysqli->prepare($result);
-                  $stmt->bind_param('i', $client_id);
-                  $stmt->execute();
-                  $stmt->bind_result($Deposits);
-                  $stmt->fetch();
-                  $stmt->close();
-                  echo $Deposits;
-                  ?>,
-              name: "Deposits",
-              exploded: true
-            },
-
-            {
-              y: <?php
-                  //return total number of transactions under  Deposits
-                  $client_id  = $_SESSION['client_id'];
-                  $result = "SELECT count(*) FROM iB_Transactions WHERE  tr_type ='Transfer' AND client_id =? ";
-                  $stmt = $mysqli->prepare($result);
-                  $stmt->bind_param('i', $client_id);
-                  $stmt->execute();
-                  $stmt->bind_result($Transfers);
-                  $stmt->fetch();
-                  $stmt->close();
-                  echo $Transfers;
-                  ?>,
-              name: "Transfers",
-              exploded: true
-            }
-
-          ]
-        }]
-      });
-      Piechart.render();
-      AccChart.render();
-    }
-
-    function explodePie(e) {
-      if (typeof(e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-        e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-      } else {
-        e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
-      }
-      e.chart.render();
-
-    }
-  </script>
 
 </body>
 

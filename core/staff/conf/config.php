@@ -2,5 +2,5 @@
     $dbuser="root";
     $dbpass="";
     $host="localhost";
-    $db="martdevelopers_iBanking";
+    $db="ebanking";
     $mysqli=new mysqli($host,$dbuser, $dbpass, $db);

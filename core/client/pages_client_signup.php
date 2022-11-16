@@ -40,8 +40,41 @@ while ($auth = $res->fetch_object()) {
 ?>
   <!DOCTYPE html>
   <html>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-  <?php include("dist/_partials/head.php"); ?>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<style>
+  .bars {
+    height: 100%; /* 100% Full-height */
+    width: 0px; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: rgb(30, 9, 31); /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    /* padding-top: 60px; Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */    
+  }
+
+  /* Position and style the close button (top right corner) */
+  .closebtn {
+    position: absolute;
+    top: 0px;
+    right: 8%;
+    font-size: 36px;
+    margin-left: 30px;
+  }
+
+  /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+  @media screen and (max-width: 450px) {
+  .nav-link {
+        font-size: 11px;
+    }
+}
+
+</style>
+  <?php include("dist/_partials/nav.php"); ?>
+<?php include("dist/_partials/head.php"); ?>
 
   <body class="hold-transition login-page">
     <div class="login-box">
@@ -147,3 +180,36 @@ while ($auth = $res->fetch_object()) {
   </html>
 <?php
 } ?>
+
+
+
+
+<div class="col-md-3 footer-item last-item">
+        <h4>Contact Us</h4>
+        <div class="contact-form">
+          <form id="contact footer-contact" action="" method="post">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <fieldset>
+                  <input name="name" type="text" class="form-control" id="name" placeholder="Full Name" required="">
+                </fieldset>
+              </div>
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <fieldset>
+                  <input name="email" type="text" class="form-control" id="email" pattern="[^ @]*@[^ @]*" placeholder="E-Mail Address" required="">
+                </fieldset>
+              </div>
+              <div class="col-lg-12">
+                <fieldset>
+                  <textarea name="message" rows="6" class="form-control" id="message" placeholder="Your Message" required=""></textarea>
+                </fieldset>
+              </div>
+              <div class="col-lg-12">
+                <fieldset>
+                  <button type="submit" id="form-submit" class="filled-button">Send Message</button>
+                </fieldset>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>

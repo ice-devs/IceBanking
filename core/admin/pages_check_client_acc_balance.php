@@ -9,13 +9,46 @@ $admin_id = $_SESSION['admin_id'];
 
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<style>
+  .bars {
+    height: 100%; /* 100% Full-height */
+    width: 0px; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: rgb(30, 9, 31); /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    /* padding-top: 60px; Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */    
+  }
+
+  /* Position and style the close button (top right corner) */
+  .closebtn {
+    position: absolute;
+    top: 0px;
+    right: 8%;
+    font-size: 36px;
+    margin-left: 30px;
+  }
+
+  /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+  @media screen and (max-width: 450px) {
+  .nav-link {
+        font-size: 11px;
+    }
+}
+
+</style>
+<?php include("dist/_partials/nav.php"); ?>
 <?php include("dist/_partials/head.php"); ?>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
         <!-- Navbar -->
-        <?php include("dist/_partials/nav.php"); ?>
+        
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
@@ -84,7 +117,9 @@ $admin_id = $_SESSION['admin_id'];
             $totalMoney = $rate_amt + $money_in;
 
         ?>
-            <div class="content-wrapper">
+            <div class="content-wrapper" id="mainsy" style="margin-left: 0%; ">
+      
+      <button id="openNav"  style="position:fixed; top:0; overflow: hidden; z-index:1; margin:5px; border-radius: 50px 50px;" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <div class="container-fluid">

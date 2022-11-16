@@ -50,7 +50,8 @@ while ($auth = $res->fetch_object()) {
 ?>
     <!DOCTYPE html>
     <html>
-    <?php include("dist/_partials/head.php"); ?>
+    <?php include("dist/_partials/nav.php"); ?>
+<?php include("dist/_partials/head.php"); ?>
 
     <body class="hold-transition login-page">
         <div class="login-box">
