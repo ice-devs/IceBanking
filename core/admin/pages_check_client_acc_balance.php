@@ -125,7 +125,7 @@ $admin_id = $_SESSION['admin_id'];
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1><?php echo $row->client_name; ?> iBanking Account Balance</h1>
+                                <h1><?php echo $row->client_name; ?> leawoodcu Account Balance</h1>
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
@@ -150,7 +150,7 @@ $admin_id = $_SESSION['admin_id'];
                                     <div class="row">
                                         <div class="col-12">
                                             <h4>
-                                                <i class="fas fa-bank"></i> iBanking Corporation Balance Enquiry
+                                                <i class="fas fa-bank"></i> leawoodcu Corporation Balance Enquiry
                                                 <small class="float-right">Date: <?php echo date('d/m/Y'); ?></small>
                                             </h4>
                                         </div>

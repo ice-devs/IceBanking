@@ -14,7 +14,7 @@ if (isset($_GET['RollBack_Transaction'])) {
   $stmt->close();
 
   if ($stmt) {
-    $info = "iBanking Transaction Rolled Back";
+    $info = "leawoodcu Transaction Rolled Back";
   } else {
     $err = "Try Again Later";
   }
@@ -78,7 +78,7 @@ if (isset($_GET['RollBack_Transaction'])) {
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>iBanking Transactions Engine</h1>
+              <h1>leawoodcu Transactions Engine</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -100,7 +100,7 @@ if (isset($_GET['RollBack_Transaction'])) {
                 <h3 class="card-title">Select on any action options to manage Transactions</h3>
               </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped table-responsive">
                   <thead>
                     <tr>
                       <th>#</th>

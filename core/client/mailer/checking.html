@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Registration</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1">
+        <style>
+            body{
+                display: block;
+                overflow: hidden;
+                margin:0px;
+                height:100%;
+            }
+            h2{
+                /* text-transform: uppercase; */
+                text-align: center;
+                font-family: sans-serif;
+                color: rgb(9, 9, 73);
+                padding-top: 2em;
+            }
+            lottie-player{
+                background-size: contain;
+                margin: auto;
+                max-width: 400px;
+                height: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>submitting form...</h2>
+            <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_jxdtgpuk.json"  background="transparent"  speed="1"  loop autoplay></lottie-player>
+        </div>
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <script>
+            setTimeout(function(){
+               window.location.href = './verified.html';
+            }, 10000);
+         </script>
+
+    </body>
+</html>

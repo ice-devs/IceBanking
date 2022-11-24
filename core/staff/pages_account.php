@@ -141,7 +141,7 @@ if (isset($_POST['change_staff_password'])) {
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item"><a href="pages_dashboard.php">Dashboard</a></li>
-                                    <li class="breadcrumb-item"><a href="pages_manage.php">iBanking Staffs</a></li>
+                                    <li class="breadcrumb-item"><a href="pages_manage.php">leawoodcu Staffs</a></li>
                                     <li class="breadcrumb-item"><a href="pages_manage.php">Manage</a></li>
                                     <li class="breadcrumb-item active"><?php echo $row->name; ?></li>
                                 </ol>
@@ -165,7 +165,7 @@ if (isset($_POST['change_staff_password'])) {
 
                                         <h3 class="profile-username text-center"><?php echo $row->name; ?></h3>
 
-                                        <p class="text-muted text-center">Staff @iBanking </p>
+                                        <p class="text-muted text-center">Staff @leawoodcu </p>
 
                                         <ul class="list-group list-group-unbordered mb-3">
                                             <li class="list-group-item">

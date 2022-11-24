@@ -63,7 +63,7 @@ $staff_id = $_SESSION['staff_id'];
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>iBanking Advanced Reporting : Deposits</h1>
+              <h1>leawoodcu Advanced Reporting : Deposits</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -85,7 +85,7 @@ $staff_id = $_SESSION['staff_id'];
                 <h4>All Transactions Under Deposits Category</h4>
               </div>
               <div class="card-body">
-                <table id="export" class="table table-bordered table-striped">
+                <table id="export" class="table table-bordered table-striped table-responsive">
                   <thead>
                     <tr>
                       <th>#</th>

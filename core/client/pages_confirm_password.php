@@ -32,7 +32,7 @@ if (isset($_POST['confirm_reset_password'])) {
                 $rc = $stmt->bind_param('ss', $new_password, $email);
                 $stmt->execute();
                 if ($stmt) {
-                    $success = "Password Changed" && header("refresh:1; url=pages_client_index.php");
+                    $success = "Password Changed" && header("refresh:1; url=sign_in.php");
                 } else {
                     $err = "Please Try Again Or Try Later";
                 }

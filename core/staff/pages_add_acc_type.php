@@ -88,7 +88,7 @@ if (isset($_POST['create_acc_type'])) {
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="pages_dashboard.php">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="pages_add_acc_type.php">iBanking</a></li>
+                                <li class="breadcrumb-item"><a href="pages_add_acc_type.php">leawoodcu</a></li>
                                 <li class="breadcrumb-item active">Add</li>
                             </ol>
                         </div>

@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `martdevelopers_iBanking`
+-- Database: `martdevelopers_leawoodcu`
 --
 
 -- --------------------------------------------------------
@@ -67,7 +67,7 @@ CREATE TABLE `iB_admin` (
 --
 
 INSERT INTO `iB_admin` (`admin_id`, `name`, `email`, `number`, `password`, `profile_pic`) VALUES
-(2, 'System Administrator', 'sysadmin@ibanking.com', 'iBank-ADM-0516', '90b9aa7e25f80cf4f64e990b78a9fc5ebd6cecad', '');
+(2, 'System Administrator', 'sysadmin@leawoodcu.com', 'iBank-ADM-0516', '90b9aa7e25f80cf4f64e990b78a9fc5ebd6cecad', '');
 
 -- --------------------------------------------------------
 
@@ -152,7 +152,7 @@ CREATE TABLE `iB_staff` (
 --
 
 INSERT INTO `iB_staff` (`staff_id`, `name`, `staff_number`, `phone`, `email`, `password`, `sex`, `profile_pic`) VALUES
-(3, 'Staff ', 'iBank-STAFF-6785', '0704975742', 'staff@ibanking.com', 'a69681bcf334ae130217fea4505fd3c994f5683f', 'Male', 'Orion.jpg');
+(3, 'Staff ', 'iBank-STAFF-6785', '0704975742', 'staff@leawoodcu.com', 'a69681bcf334ae130217fea4505fd3c994f5683f', 'Male', 'Orion.jpg');
 
 -- --------------------------------------------------------
 
@@ -172,7 +172,7 @@ CREATE TABLE `iB_SystemSettings` (
 --
 
 INSERT INTO `iB_SystemSettings` (`id`, `sys_name`, `sys_tagline`, `sys_logo`) VALUES
-(1, 'IBanking', 'Together We Prosper', 'bank.png');
+(1, 'leawoodcu', 'Together We Prosper', 'bank.png');
 
 -- --------------------------------------------------------
 
@@ -187,7 +187,7 @@ CREATE TABLE `iB_Transactions` (
   `acc_name` varchar(200) NOT NULL,
   `account_number` varchar(200) NOT NULL,
   `acc_type` varchar(200) NOT NULL,
-  `acc_amount` varchar(200) NOT NULL,
+  `acc_amount` int(20) NOT NULL DEFAULT 0.00,
   `tr_type` varchar(200) NOT NULL,
   `tr_status` varchar(200) NOT NULL,
   `client_id` varchar(200) NOT NULL,

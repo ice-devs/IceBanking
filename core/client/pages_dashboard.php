@@ -43,9 +43,11 @@ $stmt->bind_result($iB_Accs);
 $stmt->fetch();
 $stmt->close();
 
+
+
 //return total number of iBank Deposits
 $client_id = $_SESSION['client_id'];
-$result = "SELECT SUM(transaction_amt) FROM iB_Transactions WHERE  client_id = ? AND tr_type = 'Deposit' ";
+$result = "SELECT SUM(CAST(transaction_amt AS DECIMAL(10, 2))) FROM iB_Transactions WHERE  client_id = ? AND tr_type = 'Deposit' ";
 $stmt = $mysqli->prepare($result);
 $stmt->bind_param('i', $client_id);
 $stmt->execute();
@@ -55,7 +57,7 @@ $stmt->close();
 
 //return total number of iBank Withdrawals
 $client_id = $_SESSION['client_id'];
-$result = "SELECT SUM(transaction_amt) FROM iB_Transactions WHERE  client_id = ? AND tr_type = 'Withdrawal' ";
+$result = "SELECT SUM(CAST(transaction_amt AS DECIMAL(10, 2))) FROM iB_Transactions WHERE  client_id = ? AND tr_type = 'Withdrawal' ";
 $stmt = $mysqli->prepare($result);
 $stmt->bind_param('i', $client_id);
 $stmt->execute();
@@ -67,7 +69,7 @@ $stmt->close();
 
 //return total number of iBank Transfers
 $client_id = $_SESSION['client_id'];
-$result = "SELECT SUM(transaction_amt) FROM iB_Transactions WHERE  client_id = ? AND tr_type = 'Transfer' ";
+$result = "SELECT SUM(CAST(transaction_amt AS DECIMAL(10, 2))) FROM iB_Transactions WHERE  client_id = ? AND tr_type = 'Transfer' ";
 $stmt = $mysqli->prepare($result);
 $stmt->bind_param('i', $client_id);
 $stmt->execute();
@@ -77,7 +79,7 @@ $stmt->close();
 
 //return total number of  iBank initial cash->balances
 $client_id = $_SESSION['client_id'];
-$result = "SELECT SUM(transaction_amt) FROM iB_Transactions  WHERE client_id =?";
+$result = "SELECT SUM(CAST(transaction_amt AS DECIMAL(10, 2))) FROM iB_Transactions  WHERE client_id =?";
 $stmt = $mysqli->prepare($result);
 $stmt->bind_param('i', $client_id);
 $stmt->execute();
@@ -85,7 +87,8 @@ $stmt->bind_result($acc_amt);
 $stmt->fetch();
 $stmt->close();
 //Get the remaining money in the accounts
-$TotalBalInAccount = ($iB_deposits)  - (($iB_withdrawal) + ($iB_Transfers));
+$TotalBalInAccount =  number_format((float)($iB_deposits)  - (($iB_withdrawal) + ($iB_Transfers)), 2, '.', '');
+
 
 
 //ibank money in the wallet
@@ -177,6 +180,18 @@ $stmt->close();
         <div class="container-fluid">
           
           <div class="row">
+
+            <!--Balances-->
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-money-bill-alt"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">Book Balance</span>
+                  <span class="info-box-number" >$ <?php echo $TotalBalInAccount; ?></span>
+                </div>
+              </div>
+            </div>
+            <!-- ./Balances-->
             <!--iBank Deposits -->
             <div class="col-12 col-sm-6 col-md-3">
               <div class="info-box">
@@ -198,7 +213,7 @@ $stmt->close();
 
                 <div class="info-box-content">
                   <span class="info-box-text">Withdrawals</span>
-                  <span class="info-box-number">$ <?php echo $iB_withdrawal; ?> </span>
+                  <span class="info-box-number">$ <?php echo $iB_withdrawal; ?></span>
                 </div>
               </div>
             </div>
@@ -218,18 +233,6 @@ $stmt->close();
               </div>
             </div>
             <!-- /.Transfers-->
-
-            <!--Balances-->
-            <div class="col-12 col-sm-6 col-md-3">
-              <div class="info-box mb-3">
-                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-money-bill-alt"></i></span>
-                <div class="info-box-content">
-                  <span class="info-box-text">Book Balance</span>
-                  <span class="info-box-number">$<?php echo $TotalBalInAccount; ?></span>
-                </div>
-              </div>
-            </div>
-            <!-- ./Balances-->
           </div>
 
 
@@ -242,7 +245,7 @@ $stmt->close();
               <!-- TABLE: Transactions -->
               <div class="card">
                 <div class="card-header border-transparent">
-                  <h3 class="card-title">Latest Transactions</h3>
+                  <h3 class="card-title">Transaction History</h3>
 
                   <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">

@@ -85,7 +85,7 @@ $admin_id = $_SESSION['admin_id'];
                 <h3 class="card-title">Select on any account to deposit money</h3>
               </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped table-responsive">
                   <thead>
                     <tr>
                       <th>#</th>

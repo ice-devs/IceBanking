@@ -62,7 +62,7 @@ $client_id = $_SESSION['client_id'];
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>My iBanking Accounts</h1>
+              <h1>My leawoodcu Accounts</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -81,10 +81,10 @@ $client_id = $_SESSION['client_id'];
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">iBanking Accounts</h3>
+                <h3 class="card-title">leawoodcu Accounts</h3>
               </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped table-responsive">
                   <thead>
                     <tr>
                       <th>#</th>

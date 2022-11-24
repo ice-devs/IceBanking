@@ -13,7 +13,7 @@ if (isset($_GET['deleteBankAccType'])) {
   $stmt->close();
 
   if ($stmt) {
-    $info = "iBanking Account Type Removed";
+    $info = "leawoodcu Account Type Removed";
   } else {
     $err = "Try Again Later";
   }
@@ -76,7 +76,7 @@ if (isset($_GET['deleteBankAccType'])) {
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>iBanking Account Types</h1>
+              <h1>leawoodcu Account Types</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -98,7 +98,7 @@ if (isset($_GET['deleteBankAccType'])) {
                 <h3 class="card-title">Select on any action options to manage your account types</h3>
               </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped table-responsive">
                   <thead>
                     <tr>
                       <th>#</th>

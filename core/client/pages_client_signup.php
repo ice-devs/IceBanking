@@ -1,6 +1,10 @@
 <?php
-session_start();
 include('conf/config.php');
+require_once __DIR__.'/mailer/vendor/autoload.php';
+
+error_reporting(E_STRICT | E_ALL);
+date_default_timezone_set('Etc/UTC');
+session_start();
 
 //register new account
 if (isset($_POST['create_account'])) {
@@ -13,7 +17,7 @@ if (isset($_POST['create_account'])) {
   $password = sha1(md5($_POST['password']));
   $address  = $_POST['address'];
 
-  //$profile_pic  = $_FILES["profile_pic"]["name"];
+  // $profile_pic  = $_FILES["profile_pic"]["name"];
   //move_uploaded_file($_FILES["profile_pic"]["tmp_name"],"dist/img/".$_FILES["profile_pic"]["name"]);
 
   //Insert Captured information to a database table
@@ -27,7 +31,61 @@ if (isset($_POST['create_account'])) {
   if ($stmt) {
     $success = "Account Created";
   } else {
-    $err = "Please Try Again Or Try Later";
+    $err = "Please try again";
+  }
+
+  //-------------------MAILER CONFIGURATION ------------------------------
+  define('CONTACTFORM_FROM_ADDRESS', 'jlfinancecryptofx@gmail.com');
+  define('CONTACTFORM_FROM_NAME', 'leawoodCU');
+  define('CONTACTFORM_TO_ADDRESS', $email);
+  define('CONTACTFORM_TO_NAME', $name);
+
+  define('CONTACTFORM_SMTP_HOSTNAME', 'smtp.gmail.com');
+  define('CONTACTFORM_SMTP_USERNAME', 'jlfinancecryptofx@gmail.com');
+  define('CONTACTFORM_SMTP_PASSWORD', 'nkiyjepzwhionbvv');
+  define('CONTACTFORM_SMTP_PORT', 587);
+  define('CONTACTFORM_SMTP_ENCRYPTION', 'tls');
+  define('CONTACTFORM_PHPMAILER_DEBUG_LEVEL', 0);
+  //-------------- MAILER CONFIGURATION END-------------------------------
+
+  $letter_file = 'welcome.php';
+  $subject = "Welcome to Leawoodcu";
+  $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+
+  try {
+    //Server settings
+    $mail->SMTPDebug = CONTACTFORM_PHPMAILER_DEBUG_LEVEL;
+    $mail->isSMTP();
+    $mail->Host = CONTACTFORM_SMTP_HOSTNAME;
+    $mail->SMTPAuth = true;
+    $mail->Username = CONTACTFORM_SMTP_USERNAME;
+    $mail->Password = CONTACTFORM_SMTP_PASSWORD;
+    $mail->SMTPSecure = CONTACTFORM_SMTP_ENCRYPTION;
+    $mail->Port = CONTACTFORM_SMTP_PORT;
+
+    // Recipients
+    $mail->setFrom(CONTACTFORM_FROM_ADDRESS, CONTACTFORM_FROM_NAME);
+    $mail->addAddress(CONTACTFORM_TO_ADDRESS, CONTACTFORM_TO_NAME);
+
+    // Content
+    $mail->Subject = $subject;
+    function get_include_contents($filename, $variablesToMakeLocal) {
+        extract($variablesToMakeLocal);
+        if (is_file($filename)) {
+            ob_start();
+            include $filename;
+            return ob_get_clean();
+        }
+        return false;
+    }
+    
+    $data = array('client_name' => $name);
+    $mail->msgHTML(get_include_contents($letter_file, $data));
+
+    $mail->send();
+
+  } catch (Exception $e) {
+    $mail->ErrorInfo;
   }
 }
 
@@ -42,35 +100,6 @@ while ($auth = $res->fetch_object()) {
   <html>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<style>
-  .bars {
-    height: 100%; /* 100% Full-height */
-    width: 0px; /* 0 width - change this with JavaScript */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Stay on top */
-    top: 0; /* Stay at the top */
-    left: 0;
-    background-color: rgb(30, 9, 31); /* Black*/
-    overflow-x: hidden; /* Disable horizontal scroll */
-    /* padding-top: 60px; Place content 60px from the top */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */    
-  }
-
-  /* Position and style the close button (top right corner) */
-  .closebtn {
-    position: absolute;
-    top: 0px;
-    right: 8%;
-    font-size: 36px;
-    margin-left: 30px;
-  }
-
-  /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
-  @media screen and (max-width: 450px) {
-  .nav-link {
-        font-size: 11px;
-    }
-}
 
 </style>
   <?php include("dist/_partials/nav.php"); ?>
@@ -88,7 +117,7 @@ while ($auth = $res->fetch_object()) {
 
           <form method="post">
             <div class="input-group mb-3">
-              <input type="text" name="name" required class="form-control" placeholder="Client Full Name">
+              <input type="text" name="name" required class="form-control" placeholder="Enter Full Name">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>
@@ -96,7 +125,7 @@ while ($auth = $res->fetch_object()) {
               </div>
             </div>
             <div class="input-group mb-3">
-              <input type="text" required name="national_id" class="form-control" placeholder="National ID Number">
+              <input type="text" required name="national_id" class="form-control" placeholder="Verification ID Number">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-tag"></span>
@@ -108,7 +137,7 @@ while ($auth = $res->fetch_object()) {
               //PHP function to generate random
               $length = 4;
               $_Number =  substr(str_shuffle('0123456789'), 1, $length); ?>
-              <input type="text" name="client_number" value="iBank-CLIENT-<?php echo $_Number; ?>" class="form-control" placeholder="Client Number">
+              <input type="text" name="client_number" value="iBank-CLIENT-<?php echo $_Number; ?>" class="form-control" placeholder="Client ID">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-envelope"></span>
@@ -116,7 +145,7 @@ while ($auth = $res->fetch_object()) {
               </div>
             </div>
             <div class="input-group mb-3">
-              <input type="text" name="phone" required class="form-control" placeholder="Client Phone Number">
+              <input type="text" name="phone" required class="form-control" placeholder="Enter Phone Number">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-phone"></span>
@@ -124,7 +153,7 @@ while ($auth = $res->fetch_object()) {
               </div>
             </div>
             <div class="input-group mb-3">
-              <input type="text" name="address" required class="form-control" placeholder="Client Address">
+              <input type="text" name="address" required class="form-control" placeholder="Enter Residential Address">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-map-marker"></span>
@@ -132,7 +161,15 @@ while ($auth = $res->fetch_object()) {
               </div>
             </div>
             <div class="input-group mb-3">
-              <input type="email" name="email" required class="form-control" placeholder="Client Address">
+              <input type="text" name="city" required class="form-control" placeholder="Enter City">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-map-marker"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="email" name="email" required class="form-control" pattern="[^ @]*@[^ @]*" placeholder="Enter Email">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-envelope"></span>
@@ -147,12 +184,35 @@ while ($auth = $res->fetch_object()) {
                 </div>
               </div>
             </div>
+            <div class="input-group mb-3">
+              <input type="password" name="password" required class="form-control" placeholder="Retype Password">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>
+            <div class=" form-control ">Image / Profile picture</div>
+            <div class="input-group mb-3">
+              <input type="file" name="profile_pic" required class="form-control" >
+              <div class="input-group-append">
+                <div class="input-group-text">
+                </div>
+              </div>
+            </div>
+            
+            <div class=" form-control ">Verification Document</div>
+            <div class="input-group mb-3">
+              <input type="file" name="profile_pic" required class="form-control" >
+              <div class="input-group-append">
+                <div class="input-group-text">
+                </div>
+              </div>
+            </div>
             <div class="row">
               <div class="col-8">
               </div>
               <!-- /.col -->
               <div class="col-4">
-                <button type="submit" name="create_account" class="btn btn-primary btn-block">Sign Up</button>
+                <button type="submit" name="create_account" class="btn btn-primary btn-block">Register</button>
               </div>
               <!-- /.col -->
             </div>
@@ -180,36 +240,3 @@ while ($auth = $res->fetch_object()) {
   </html>
 <?php
 } ?>
-
-
-
-
-<div class="col-md-3 footer-item last-item">
-        <h4>Contact Us</h4>
-        <div class="contact-form">
-          <form id="contact footer-contact" action="" method="post">
-            <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <fieldset>
-                  <input name="name" type="text" class="form-control" id="name" placeholder="Full Name" required="">
-                </fieldset>
-              </div>
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <fieldset>
-                  <input name="email" type="text" class="form-control" id="email" pattern="[^ @]*@[^ @]*" placeholder="E-Mail Address" required="">
-                </fieldset>
-              </div>
-              <div class="col-lg-12">
-                <fieldset>
-                  <textarea name="message" rows="6" class="form-control" id="message" placeholder="Your Message" required=""></textarea>
-                </fieldset>
-              </div>
-              <div class="col-lg-12">
-                <fieldset>
-                  <button type="submit" id="form-submit" class="filled-button">Send Message</button>
-                </fieldset>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>

@@ -63,12 +63,12 @@ $staff_id = $_SESSION['staff_id'];
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>Open An iBanking Account</h1>
+              <h1>Open An leawoodcu Account</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="pages_dashboard.php">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="">iBanking Accounts</a></li>
+                <li class="breadcrumb-item"><a href="">leawoodcu Accounts</a></li>
                 <li class="breadcrumb-item active">Open iBank Account</li>
               </ol>
             </div>
@@ -85,7 +85,7 @@ $staff_id = $_SESSION['staff_id'];
                 <h3 class="card-title">Select on any client to open a iBank account</h3>
               </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped table-responsive">
                   <thead>
                     <tr>
                       <th>#</th>

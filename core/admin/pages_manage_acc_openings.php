@@ -14,7 +14,7 @@ if (isset($_GET['deleteBankAcc'])) {
   $stmt->close();
 
   if ($stmt) {
-    $info = "iBanking Account Closed";
+    $info = "leawoodcu Account Closed";
   } else {
     $err = "Try Again Later";
   }
@@ -77,7 +77,7 @@ if (isset($_GET['deleteBankAcc'])) {
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>Manage iBanking Accounts</h1>
+              <h1>Manage leawoodcu Accounts</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -99,7 +99,7 @@ if (isset($_GET['deleteBankAcc'])) {
                 <h3 class="card-title">Select on any action options to manage your accounts</h3>
               </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped table-responsive">
                   <thead>
                     <tr>
                       <th>#</th>

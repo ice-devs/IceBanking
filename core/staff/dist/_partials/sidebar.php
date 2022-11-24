@@ -30,7 +30,7 @@
   ?>
 
       <a href="pages_dashboard.php" class="brand-link">
-        <img src="../admin/dist/img/<?php echo $sys->sys_logo; ?>" alt="iBanking Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="../admin/dist/img/<?php echo $sys->sys_logo; ?>" alt="leawoodcu Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light"><?php echo $sys->sys_name;?></span>
       </a>
 

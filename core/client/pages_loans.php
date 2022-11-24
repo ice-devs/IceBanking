@@ -63,7 +63,7 @@ $client_id = $_SESSION['client_id'];
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>iBanking Loans</h1>
+              <h1>leawoodcu Loans</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -85,7 +85,7 @@ $client_id = $_SESSION['client_id'];
                 <h3 class="card-title">Select on any action options to manage your clients</h3>
               </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped table-responsive">
                   <thead>
                     <tr>
                       <th>#</th>

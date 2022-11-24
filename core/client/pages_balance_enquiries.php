@@ -85,7 +85,7 @@ $client_id = $_SESSION['client_id'];
                 <h3 class="card-title">Select on any action options to manage enquiries </h3>
               </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped table-responsive">
                   <thead>
                     <tr>
                       <th>#</th>

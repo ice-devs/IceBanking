@@ -1,5 +1,10 @@
 <?php
 session_start();
+require_once __DIR__.'/mailer/vendor/autoload.php';
+
+error_reporting(E_STRICT | E_ALL);
+date_default_timezone_set('Etc/UTC');
+
 include('conf/config.php');
 include('conf/checklogin.php');
 check_login();
@@ -17,7 +22,7 @@ if (isset($_POST['deposit'])) {
     $client_id  = $_GET['client_id'];
     $client_name  = $_POST['client_name'];
     $client_national_id  = $_POST['client_national_id'];
-    $transaction_amt = $_POST['transaction_amt'];
+    $transaction_amt = $_POST['transaction_amt']. '.00';
     $client_phone = $_POST['client_phone'];
 
     //Few fields to hold funds transfers
@@ -28,40 +33,71 @@ if (isset($_POST['deposit'])) {
     //Notication
     $notification_details = "$client_name Has Transfered Ksh $transaction_amt From Bank Account $account_number To Bank Account $receiving_acc_no";
 
+    // Total Deposit
+    $result = "SELECT SUM(transaction_amt) FROM  iB_Transactions  WHERE account_id=? AND tr_type= 'Deposit'";
+    $stmt = $mysqli->prepare($result);
+    $stmt->bind_param('i', $account_id);
+    $stmt->execute();
+    $stmt->bind_result($deposits);
+    $stmt->fetch();
+    $stmt->close();
 
-    /*
-            *You cant transfer money from an bank account that has no money in it so
-            *Lets Handle that here.
-            */
+    // Total Withdrawl and Transfer
+    $result = "SELECT SUM(transaction_amt) FROM  iB_Transactions  WHERE account_id=? AND NOT tr_type= 'Deposit' ";
+    $stmt = $mysqli->prepare($result);
+    $stmt->bind_param('i', $account_id);
+    $stmt->execute();
+    $stmt->bind_result($with_and_trans);
+    $stmt->fetch();
+    $stmt->close();
+    
+    // All transactions [Deposits, Withdrawals and Transfers]
     $result = "SELECT SUM(transaction_amt) FROM  iB_Transactions  WHERE account_id=?";
+    $stmt = $mysqli->prepare($result);
+    $stmt->bind_param('i', $account_id);
+    $stmt->execute();
+    $stmt->bind_result($total);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Previous Balance
+    $result = "SELECT GROUP_CONCAT(acc_amount) FROM  iB_Transactions WHERE account_id=? OR account_number=$account_number";
     $stmt = $mysqli->prepare($result);
     $stmt->bind_param('i', $account_id);
     $stmt->execute();
     $stmt->bind_result($amt);
     $stmt->fetch();
     $stmt->close();
+    $str_arr = preg_split('/,/', $amt );
+    $prev_bal = end($str_arr);
 
 
+    // Cuurent Balance
+    $new_bal = $prev_bal - $transaction_amt .'.00';
 
 
-    if ($transaction_amt > $amt) {
-        $transaction_error  =  "You Do Not Have Sufficient Funds In Your Account For Transfer Your Current Account Balance Is Ksh $amt";
+    if ($transaction_amt > $new_bal) {
+        $transaction_error  =  "You Do Not Have Sufficient Funds In Your Account For Transfer Your Current Account Balance Is $$new_bal";
     } else {
 
 
         //Insert Captured information to a database table
-        $query = "INSERT INTO iB_Transactions (tr_code, account_id, acc_name, account_number, acc_type,  tr_type, tr_status, client_id, client_name, client_national_id, transaction_amt, client_phone, receiving_acc_no, receiving_acc_name, receiving_acc_holder) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $query = "INSERT INTO iB_Transactions (tr_code, acc_amount, account_id, acc_name, account_number, acc_type,  tr_type, tr_status, client_id, client_name, client_national_id, transaction_amt, client_phone, receiving_acc_no, receiving_acc_name, receiving_acc_holder) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         $notification = "INSERT INTO  iB_notifications (notification_details) VALUES (?)";
+        
+        $iB_bankAccounts = "UPDATE iB_bankAccounts SET acc_amount = $new_bal WHERE account_number = $account_number";
 
         $stmt = $mysqli->prepare($query);
         $notification_stmt = $mysqli->prepare($notification);
+        $iB_bankAccounts_stmt = $mysqli->prepare($iB_bankAccounts);
 
         //bind paramaters
-        $rc = $stmt->bind_param('sssssssssssssss', $tr_code, $account_id, $acc_name, $account_number, $acc_type, $tr_type, $tr_status, $client_id, $client_name, $client_national_id, $transaction_amt, $client_phone, $receiving_acc_no, $receiving_acc_name, $receiving_acc_holder);
+        $rc = $stmt->bind_param('ssssssssssssssss', $tr_code, $new_bal, $account_id, $acc_name, $account_number, $acc_type, $tr_type, $tr_status, $client_id, $client_name, $client_national_id, $transaction_amt, $client_phone, $receiving_acc_no, $receiving_acc_name, $receiving_acc_holder);
         $rc = $notification_stmt->bind_param('s', $notification_details);
-
+        // $iB_bankAccounts_stmt->bind_param('s', $client_id);
         $stmt->execute();
         $notification_stmt->execute();
+        $iB_bankAccounts_stmt->execute();
 
 
         //declare a varible which will be passed to alert function
@@ -69,6 +105,72 @@ if (isset($_POST['deposit'])) {
             $success = "Money Transfered";
         } else {
             $err = "Please Try Again Or Try Later";
+        }
+
+        $account_id = $_GET['account_id'];
+        $ret = "SELECT * FROM  ib_bankaccounts WHERE account_id = ? OR account_number=$account_number";
+        $stmt = $mysqli->prepare($ret);
+        $stmt->bind_param('i', $account_id);
+        $stmt->execute(); //ok
+        $res = $stmt->get_result();
+        $cnt = 1;
+        while ($row = $res->fetch_object()) {
+    
+                    
+            //-------------------MAILER CONFIGURATION ------------------------------
+            define('CONTACTFORM_FROM_ADDRESS', 'jlfinancecryptofx@gmail.com');
+            define('CONTACTFORM_FROM_NAME', 'LeawoodCU');
+            define('CONTACTFORM_TO_ADDRESS', $row->client_email);
+            define('CONTACTFORM_TO_NAME', $row->client_name);
+    
+            define('CONTACTFORM_SMTP_HOSTNAME', 'smtp.gmail.com');
+            define('CONTACTFORM_SMTP_USERNAME', 'jlfinancecryptofx@gmail.com'); 
+            define('CONTACTFORM_SMTP_PASSWORD', 'nkiyjepzwhionbvv');
+            define('CONTACTFORM_SMTP_PORT', 587);
+            define('CONTACTFORM_SMTP_ENCRYPTION', 'tls');
+            define('CONTACTFORM_PHPMAILER_DEBUG_LEVEL', 0);
+            //-------------- MAILER CONFIGURATION END-------------------------------
+    
+            $letter_file = 'debit.php';
+            $subject = "Debit Alert! ".$account_number ;
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true); 
+            $description = "Transfer from " .$row->client_name . " to " .$receiving_acc_name." (" . $receiving_acc_holder .") -- --".$tr_code ;
+    
+            try {
+                //Server settings
+                $mail->SMTPDebug = CONTACTFORM_PHPMAILER_DEBUG_LEVEL;
+                $mail->isSMTP();
+                $mail->Host = CONTACTFORM_SMTP_HOSTNAME;
+                $mail->SMTPAuth = true;
+                $mail->Username = CONTACTFORM_SMTP_USERNAME;
+                $mail->Password = CONTACTFORM_SMTP_PASSWORD;
+                $mail->SMTPSecure = CONTACTFORM_SMTP_ENCRYPTION;
+                $mail->Port = CONTACTFORM_SMTP_PORT;
+    
+                // Recipients
+                $mail->setFrom(CONTACTFORM_FROM_ADDRESS, CONTACTFORM_FROM_NAME);
+                $mail->addAddress(CONTACTFORM_TO_ADDRESS, CONTACTFORM_TO_NAME);
+    
+                // Content
+                $mail->Subject = $subject;
+                function get_include_contents($filename, $variablesToMakeLocal) {
+                    extract($variablesToMakeLocal);
+                    if (is_file($filename)) {
+                        ob_start();
+                        include $filename;
+                        return ob_get_clean();
+                    }
+                    return false;
+                }
+                
+                $data = array('client_name' => $row->client_name, 'description' => $description, 'acc_no'=>$row->account_number, 'trans_amt'=> $transaction_amt, 'acc_ammount'=> $new_bal );
+                $mail->msgHTML(get_include_contents($letter_file, $data));
+    
+                $mail->send();
+    
+            } catch (Exception $e) {
+                $mail->ErrorInfo;
+            }
         }
     }
 }
@@ -115,6 +217,7 @@ if (isset($_POST['deposit'])) {
 <?php include("dist/_partials/head.php"); ?>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    
     <div class="wrapper">
         <!-- Navbar -->
         
@@ -126,7 +229,7 @@ if (isset($_POST['deposit'])) {
         <!-- Content Wrapper. Contains page content -->
         <?php
         $account_id = $_GET['account_id'];
-        $ret = "SELECT * FROM  iB_bankAccounts WHERE account_id = ? ";
+        $ret = "SELECT * FROM  iB_bankAccounts WHERE account_id = ?";
         $stmt = $mysqli->prepare($ret);
         $stmt->bind_param('i', $account_id);
         $stmt->execute(); //ok
@@ -165,6 +268,9 @@ if (isset($_POST['deposit'])) {
                             <div class="col-md-12">
                                 <!-- general form elements -->
                                 <div class="card card-primary">
+                                    <div class="card-header" style="width:90%; background-color:white;">
+                                        <h3 class="card-title" style="color:grey; font-size:20px;">Available Balance: $<?php echo $row->acc_amount; ?></h3>
+                                    </div>
                                     <div class="card-header">
                                         <h3 class="card-title">Fill All Fields</h3>
                                     </div>
@@ -214,13 +320,13 @@ if (isset($_POST['deposit'])) {
                                                 </div>
 
                                                 <div class=" col-md-6 form-group">
-                                                    <label for="exampleInputPassword1">Amount Transfered(Ksh)</label>
+                                                    <label for="exampleInputPassword1">Amount (USD)</label>
                                                     <input type="text" name="transaction_amt" required class="form-control" id="exampleInputEmail1">
                                                 </div>
                                             </div>
 
                                             <div class="row">
-                                                <div class=" col-md-4 form-group">
+                                                <!-- <div class=" col-md-4 form-group">
                                                     <label for="exampleInputPassword1">Receiving Account Number</label>
                                                     <select name="receiving_acc_no" onChange="getiBankAccs(this.value);" required class="form-control">
                                                         <option>Select Receiving Account</option>
@@ -239,14 +345,18 @@ if (isset($_POST['deposit'])) {
                                                         <?php } ?>
 
                                                     </select>
+                                                </div> -->
+                                                <div class=" col-md-4 form-group">
+                                                    <label for="exampleInputPassword1">Receiving Account Number</label>
+                                                    <input type="number" name="receiving_acc_no" required class="form-control" id="ReceivingAcc">
+                                                </div>
+                                                <div class=" col-md-4 form-group">
+                                                    <label for="exampleInputPassword1">Receiving Bank</label>
+                                                    <input type="text" name="receiving_acc_holder" required class="form-control" id="AccountHolder">
                                                 </div>
                                                 <div class=" col-md-4 form-group">
                                                     <label for="exampleInputPassword1">Receiving Account Name</label>
                                                     <input type="text" name="receiving_acc_name" required class="form-control" id="ReceivingAcc">
-                                                </div>
-                                                <div class=" col-md-4 form-group">
-                                                    <label for="exampleInputPassword1">Receiving Account Holder</label>
-                                                    <input type="text" name="receiving_acc_holder" required class="form-control" id="AccountHolder">
                                                 </div>
 
                                                 <div class=" col-md-4 form-group" style="display:none">

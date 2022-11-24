@@ -37,13 +37,6 @@ if (isset($_POST['reset_password'])) {
     $err = "Email Does Not Exist";
   }
 }
-
-/* Persisit System Settings On Brand */
-$ret = "SELECT * FROM `iB_SystemSettings` ";
-$stmt = $mysqli->prepare($ret);
-$stmt->execute(); //ok
-$res = $stmt->get_result();
-while ($auth = $res->fetch_object()) {
 ?>
   <!DOCTYPE html>
   <html>
@@ -52,13 +45,10 @@ while ($auth = $res->fetch_object()) {
 
   <body class="hold-transition login-page">
     <div class="login-box">
-      <div class="login-logo">
-        <p><?php echo $auth->sys_name; ?> - <?php echo $auth->sys_tagline; ?></p>
-      </div>
       <!-- /.login-logo -->
       <div class="card">
         <div class="card-body login-card-body">
-          <p class="login-box-msg">You forgot your password? Here you can easily retrieve a new password.</p>
+          <p class="login-box-msg">Please enter your email address to recover your password</p>
 
           <form method="POST">
             <div class="input-group mb-3">
@@ -79,7 +69,7 @@ while ($auth = $res->fetch_object()) {
           </form>
 
           <p class="mt-3 mb-1">
-            <a href="pages_client_index.php">Login</a>
+            <a href="sign_in.php">Login</a>
           </p>
 
         </div>
@@ -98,5 +88,3 @@ while ($auth = $res->fetch_object()) {
   </body>
 
   </html>
-<?php
-} ?>

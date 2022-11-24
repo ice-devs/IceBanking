@@ -84,13 +84,13 @@ $client_id = $_SESSION['client_id'];
                 <h3 class="card-title">Select on any account to deposit money</h3>
               </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped table-responsive">
                   <thead>
                     <tr>
                       <th>#</th>
                       <th>Name</th>
                       <th>Acc Number</th>
-                      <th>Rate</th>
+                      <th>Acc Balance</th>
                       <th>Acc Type</th>
                       <th>Acc Owner</th>
                       <th>Action</th>
@@ -116,11 +116,11 @@ $client_id = $_SESSION['client_id'];
                         <td><?php echo $cnt; ?></td>
                         <td><?php echo $row->acc_name; ?></td>
                         <td><?php echo $row->account_number; ?></td>
-                        <td><?php echo $row->acc_rates; ?>%</td>
+                        <td>$<?php echo $row->acc_amount; ?></td>
                         <td><?php echo $row->acc_type; ?></td>
                         <td><?php echo $row->client_name; ?></td>
                         <td>
-                          <a class="badge badge-success" href="pages_deposit_money.php?account_id=<?php echo $row->account_id; ?>&account_number=<?php echo $row->account_number; ?>&client_id=<?php echo $row->client_id; ?>">
+                          <a class="badge badge-success" href="pages_deposit_money.php?account_id=<?php echo $row->account_id; ?>&account_number=<?php echo $row->account_number; ?>&client_id=<?php echo $row->client_id; ?>&client_id=<?php echo $row->client_id; ?>">
                             <i class="fas fa-money-bill-alt"></i>
                             <i class="fas fa-upload"></i>
                             Deposit Money

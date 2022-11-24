@@ -1,0 +1,27 @@
+body{
+    background: linear-gradient(to right, rgb(76, 10, 77), rgb(31, 7, 95));
+}
+.mt-5{
+    background: linear-gradient(to right, rgb(188, 193, 118), rgb(138, 196, 100));
+    border-radius: 20px;
+    margin-bottom: 120px;
+}
+.form-control{
+    border-radius: 10px;
+}
+.btn-block{
+    border-radius: 20px;
+    background: linear-gradient(to right, rgb(76, 10, 77), rgb(31, 7, 95));
+}
+.alert-success{
+    border-radius: 5px;
+}
+.alert-danger{
+    border-radius: 5px;
+}
+label{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-style: italic;
+    font-size: 16px;
+    font-weight: 500;
+}

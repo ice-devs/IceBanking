@@ -106,15 +106,15 @@ $client_id = $_SESSION['client_id'];
         $cnt = 1;
         while ($row = $res->fetch_object()) {
             //compute rate
-            $banking_rate = ($row->acc_rates) / 100;
+            // $banking_rate = ($row->acc_rates) / 100;
             //compute Money out
             $money_out = $withdrawal + $Transfer;
             //compute the balance
-            $money_in = $deposit - $money_out;
+            $money_in = $deposit;
             //get the rate
-            $rate_amt = $banking_rate * $money_in;
+            // $rate_amt = $banking_rate * $money_in;
             //compute the intrest + balance 
-            $totalMoney = $rate_amt + $money_in;
+            // $totalMoney = $rate_amt + $money_in;
 
         ?>
             <div class="content-wrapper" id="mainsy" style="margin-left: 0%; ">
@@ -125,7 +125,7 @@ $client_id = $_SESSION['client_id'];
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1><?php echo $row->client_name; ?> iBanking Account Balance</h1>
+                                <h1><?php echo $row->client_name; ?> LeawoodCU Account Balance</h1>
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
@@ -150,16 +150,16 @@ $client_id = $_SESSION['client_id'];
                                     <div class="row">
                                         <div class="col-12">
                                             <h4>
-                                                <i class="fas fa-bank"></i> iBanking Corporation Balance Enquiry
-                                                <small class="float-right">Date: <?php echo date('d/m/Y'); ?></small>
+                                                <i class="fas fa-bank"></i> Leawood Credit Union Balance Enquiry
+                                                <small class="float-right" style="font-size:12px;">Date: <?php echo date('d/m/Y'); ?></small>
                                             </h4>
-                                        </div>
+                                        </div><br><br>
                                         <!-- /.col -->
                                     </div>
                                     <!-- info row -->
                                     <div class="row invoice-info">
                                         <div class="col-sm-6 invoice-col">
-                                            iBank Account Holder
+                                        <span style="color:blueviolet;">Account Holder</span>
                                             <address>
                                                 <strong><?php echo $row->client_name; ?></strong><br>
                                                 <?php echo $row->client_number; ?><br>
@@ -169,13 +169,13 @@ $client_id = $_SESSION['client_id'];
                                             </address>
                                         </div>
                                         <!-- /.col -->
-                                        <div class="col-sm-6 invoice-col">
-                                            iBank Account Details
+                                        <div class="col-sm-6 invoice-col" >
+                                        <span style="color:blueviolet;">Account Details</span>
                                             <address>
                                                 <strong><?php echo $row->acc_name; ?></strong><br>
                                                 Acc No: <?php echo $row->account_number; ?><br>
                                                 Acc Type: <?php echo $row->acc_type; ?><br>
-                                                Acc Rates: <?php echo $row->acc_rates; ?> %
+                                                <!-- Acc Rates: <?php echo $row->acc_rates; ?> % -->
                                             </address>
                                         </div>
 
@@ -183,8 +183,8 @@ $client_id = $_SESSION['client_id'];
                                     <!-- /.row -->
 
                                     <!-- Table row -->
-                                    <div class="row">
-                                        <div class="col-12 table-responsive">
+                                    <div class="row" >
+                                        <div class="col-12 table-responsive"">
                                             <table class="table table-striped">
                                                 <thead>
                                                     <tr>
@@ -197,10 +197,10 @@ $client_id = $_SESSION['client_id'];
                                                 <tbody>
 
                                                     <tr>
-                                                        <td>Ksh <?php echo $deposit; ?></td>
-                                                        <td>Ksh <?php echo $withdrawal; ?></td>
-                                                        <td>Ksh <?php echo $Transfer; ?></td>
-                                                        <td>Ksh <?php echo $money_in; ?></td>
+                                                        <td>$<?php echo $deposit; ?></td>
+                                                        <td>$<?php echo $withdrawal; ?></td>
+                                                        <td>$<?php echo $Transfer; ?></td>
+                                                        <td>$<?php echo $row->acc_amount; ?></td>
                                                     </tr>
 
                                                 </tbody>
@@ -212,38 +212,38 @@ $client_id = $_SESSION['client_id'];
 
                                     <div class="row">
                                         <!-- accepted payments column -->
-                                        <div class="col-6">
+                                        <!-- <div class="col-6">
                                             <p class="lead"></p>
 
                                             <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
 
                                             </p>
-                                        </div>
+                                        </div> -->
                                         <!-- /.col -->
-                                        <div class="col-6">
-                                            <p class="lead">Balance Checked On : <?php echo date('d-M-Y'); ?></p>
+                                        <div class="col-12">
+                                            <p class="lead" style="font-size:14px; width:70%; float:right"><span style="font-size:12px; float:right""> <?php echo date('d-M-Y') . " ". date("h:i:sa"); ?></span></p>
 
-                                            <div class="table-responsive">
+                                            <div class="table-responsive" style="font-size:12px; width:70%; float:right">
                                                 <table class="table">
                                                     <tr>
                                                         <th style="width:50%">Funds In:</th>
-                                                        <td>Ksh <?php echo $deposit; ?></td>
+                                                        <td>$<?php echo $deposit; ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th>Funds Out</th>
-                                                        <td>Ksh <?php echo $money_out; ?></td>
+                                                        <td>$<?php echo $money_out; ?></td>
                                                     </tr>
-                                                    <tr>
+                                                    <!-- <tr>
                                                         <th>Sub Total:</th>
-                                                        <td>Ksh <?php echo $money_in; ?></td>
-                                                    </tr>
-                                                    <tr>
+                                                        <td>$<?php echo $money_in; ?></td>
+                                                    </tr> -->
+                                                    <!-- <tr>
                                                         <th>Banking Intrest:</th>
-                                                        <td>Ksh <?php echo $rate_amt; ?></td>
-                                                    </tr>
+                                                        <td>$<?php echo $rate_amt; ?></td>
+                                                    </tr> -->
                                                     <tr>
                                                         <th>Total Balance:</th>
-                                                        <td>Ksh <?php echo $totalMoney; ?></td>
+                                                        <td>$<?php echo $row->acc_amount; ?></td>
                                                     </tr>
                                                 </table>
                                             </div>

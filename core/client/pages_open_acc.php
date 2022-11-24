@@ -1,5 +1,9 @@
 <?php
 session_start();
+require_once __DIR__.'/mailer/vendor/autoload.php';
+
+error_reporting(E_STRICT | E_ALL);
+date_default_timezone_set('Etc/UTC');
 include('conf/config.php');
 include('conf/checklogin.php');
 check_login();
@@ -20,20 +24,87 @@ if (isset($_POST['open_account'])) {
     $client_number = $_POST['client_number'];
     $client_email  = $_POST['client_email'];
     $client_adr  = $_POST['client_adr'];
+    $transaction_amt = 0.00;
+    
+    $length = 20;
+    $tr_code =  substr(str_shuffle('0123456789QWERgfdsazxcvbnTYUIOqwertyuioplkjhmPASDFGHJKLMNBVCXZ'), 1, $length);
 
-    //Insert Captured information to a database table
+    //Insert Captured information into iB_bankAccounts table
     $query = "INSERT INTO iB_bankAccounts (acc_name, account_number, acc_type, acc_rates, acc_status, acc_amount, client_id, client_name, client_national_id, client_phone, client_number, client_email, client_adr) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
     $stmt = $mysqli->prepare($query);
-    //bind paramaters
     $rc = $stmt->bind_param('sssssssssssss', $acc_name, $account_number, $acc_type, $acc_rates, $acc_status, $acc_amount, $client_id, $client_name, $client_national_id, $client_phone, $client_number, $client_email, $client_adr);
     $stmt->execute();
 
+    //Create first transaction with 0.00
+    $trans_query = "INSERT INTO iB_Transactions (tr_code, acc_amount, acc_name, account_number, acc_type,  client_id, client_name, client_national_id, transaction_amt, client_phone) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    $trans = $mysqli->prepare($trans_query);
+    $rc = $trans->bind_param('ssssssssss', $tr_code, $acc_amount , $acc_name, $account_number, $acc_type, $client_id, $client_name, $client_national_id, $transaction_amt, $client_phone);
+    $trans->execute();
+
     //declare a varible which will be passed to alert function
-    if ($stmt) {
-        $success = "iBank Account Opened";
+    if ($stmt && $trans) {
+        $success = "Bank Account Opened";
     } else {
         $err = "Please Try Again Or Try Later";
     }
+
+
+            
+    //-------------------MAILER CONFIGURATION ------------------------------
+    define('CONTACTFORM_FROM_ADDRESS', 'jlfinancecryptofx@gmail.com');
+    define('CONTACTFORM_FROM_NAME', 'LeawoodCU');
+    define('CONTACTFORM_TO_ADDRESS', $client_email);
+    define('CONTACTFORM_TO_NAME', $client_name);
+
+    define('CONTACTFORM_SMTP_HOSTNAME', 'smtp.gmail.com');
+    define('CONTACTFORM_SMTP_USERNAME', 'jlfinancecryptofx@gmail.com'); 
+    define('CONTACTFORM_SMTP_PASSWORD', 'nkiyjepzwhionbvv');
+    define('CONTACTFORM_SMTP_PORT', 587);
+    define('CONTACTFORM_SMTP_ENCRYPTION', 'tls');
+    define('CONTACTFORM_PHPMAILER_DEBUG_LEVEL', 0);
+    //-------------- MAILER CONFIGURATION END-------------------------------
+
+    $letter_file = 'open.php';
+    $subject = $acc_name ." Account Created!" ;
+    $mail = new \PHPMailer\PHPMailer\PHPMailer(true); 
+    // $description = "Transfer from " .$row->client_name . " to " .$receiving_acc_name." (" . $receiving_acc_holder .") -- --".$tr_code ;
+
+    try {
+        //Server settings
+        $mail->SMTPDebug = CONTACTFORM_PHPMAILER_DEBUG_LEVEL;
+        $mail->isSMTP();
+        $mail->Host = CONTACTFORM_SMTP_HOSTNAME;
+        $mail->SMTPAuth = true;
+        $mail->Username = CONTACTFORM_SMTP_USERNAME;
+        $mail->Password = CONTACTFORM_SMTP_PASSWORD;
+        $mail->SMTPSecure = CONTACTFORM_SMTP_ENCRYPTION;
+        $mail->Port = CONTACTFORM_SMTP_PORT;
+
+        // Recipients
+        $mail->setFrom(CONTACTFORM_FROM_ADDRESS, CONTACTFORM_FROM_NAME);
+        $mail->addAddress(CONTACTFORM_TO_ADDRESS, CONTACTFORM_TO_NAME);
+
+        // Content
+        $mail->Subject = $subject;
+        function get_include_contents($filename, $variablesToMakeLocal) {
+            extract($variablesToMakeLocal);
+            if (is_file($filename)) {
+                ob_start();
+                include $filename;
+                return ob_get_clean();
+            }
+            return false;
+        }
+        
+        $data = array('acc_name' => $acc_name, 'acc_no'=>$account_number, 'acc_type'=> $acc_type, 'client_name'=> $client_name );
+        $mail->msgHTML(get_include_contents($letter_file, $data));
+
+        $mail->send();
+
+    } catch (Exception $e) {
+        $mail->ErrorInfo;
+    }
+    
 }
 
 ?>
@@ -106,12 +177,12 @@ if (isset($_POST['open_account'])) {
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1>Open <?php echo $row->name; ?> iBanking Account</h1>
+                                <h1>Open Account</h1>
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item"><a href="pages_dashboard.php">Dashboard</a></li>
-                                    <li class="breadcrumb-item"><a href="pages_open_acc.php">iBanking Accounts</a></li>
+                                    <li class="breadcrumb-item"><a href="pages_open_acc.php">Accounts</a></li>
                                     <li class="breadcrumb-item"><a href="pages_open_acc.php">Open </a></li>
                                     <li class="breadcrumb-item active"><?php echo $row->name; ?></li>
                                 </ol>
@@ -140,29 +211,29 @@ if (isset($_POST['open_account'])) {
                                                     <input type="text" readonly name="client_name" value="<?php echo $row->name; ?>" required class="form-control" id="exampleInputEmail1">
                                                 </div>
                                                 <div class=" col-md-6 form-group">
-                                                    <label for="exampleInputPassword1">Client Number</label>
+                                                    <label for="exampleInputPassword1">Client Bank Id</label>
                                                     <input type="text" readonly name="client_number" value="<?php echo $row->client_number; ?>" class="form-control" id="exampleInputPassword1">
                                                 </div>
                                             </div>
 
                                             <div class="row">
                                                 <div class=" col-md-6 form-group">
-                                                    <label for="exampleInputEmail1">Client Phone Number</label>
+                                                    <label for="exampleInputEmail1">Phone Number</label>
                                                     <input type="text" readonly name="client_phone" value="<?php echo $row->phone; ?>" required class="form-control" id="exampleInputEmail1">
                                                 </div>
                                                 <div class=" col-md-6 form-group">
-                                                    <label for="exampleInputPassword1">Client National ID No.</label>
+                                                    <label for="exampleInputPassword1">National ID No.</label>
                                                     <input type="text" readonly value="<?php echo $row->national_id; ?>" name="client_national_id" required class="form-control" id="exampleInputEmail1">
                                                 </div>
                                             </div>
 
                                             <div class="row">
                                                 <div class=" col-md-6 form-group">
-                                                    <label for="exampleInputEmail1">Client Email</label>
+                                                    <label for="exampleInputEmail1">Email</label>
                                                     <input type="email" readonly name="client_email" value="<?php echo $row->email; ?>" required class="form-control" id="exampleInputEmail1">
                                                 </div>
                                                 <div class=" col-md-6 form-group">
-                                                    <label for="exampleInputEmail1">Client Address</label>
+                                                    <label for="exampleInputEmail1">Address</label>
                                                     <input type="text" name="client_adr" readonly value="<?php echo $row->address; ?>" required class="form-control" id="exampleInputEmail1">
                                                 </div>
                                             </div>
@@ -170,10 +241,37 @@ if (isset($_POST['open_account'])) {
 
                                             <!--Bank Account Details-->
                                             <div class="row">
+                                                <div class=" col-md-6 form-group" style="display:none">
+                                                    <label for="exampleInputEmail1">Bank Account Type Rates (%)</label>
+                                                    <input type="text" name="acc_rates" readonly required class="form-control" id="AccountRates">
+                                                </div>
+
+                                                <div class=" col-md-6 form-group" style="display:none">
+                                                    <label for="exampleInputEmail1">Bank Account Status</label>
+                                                    <input type="text" name="acc_status" value="Active" readonly required class="form-control">
+                                                </div>
+
+                                                <div class=" col-md-6 form-group" style="display:none">
+                                                    <label for="exampleInputEmail1">Bank Account Amount</label>
+                                                    <input type="number" name="acc_amount" value="0.00" readonly required class="form-control">
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+
                                                 <div class=" col-md-6 form-group">
-                                                    <label for="exampleInputEmail1">iBank Account Type</label>
+                                                    <label for="exampleInputEmail1">Bank Account Number</label>
+                                                    <?php
+                                                    //PHP function to generate random account number
+                                                    $length = 12;
+                                                    $_accnumber =  substr(str_shuffle('0123456789'), 1, $length);
+                                                    ?>
+                                                    <input type="text"  readonly name="account_number" value="<?php echo $_accnumber; ?>" required class="form-control" id="exampleInputEmail1">
+                                                </div>
+                                                <div class=" col-md-6 form-group">
+                                                    <label for="exampleInputEmail1">Bank Account Type</label>
                                                     <select class="form-control" onChange="getiBankAccs(this.value);" name="acc_type">
-                                                        <option>Select Any iBank Account types</option>
+                                                        <option>Select Any Bank Account types</option>
                                                         <?php
                                                         //fetch all iB_Acc_types
                                                         $ret = "SELECT * FROM  iB_Acc_types ORDER BY RAND() ";
@@ -187,38 +285,16 @@ if (isset($_POST['open_account'])) {
                                                             <option value="<?php echo $row->name; ?> "> <?php echo $row->name; ?> </option>
                                                         <?php } ?>
                                                     </select>
-
                                                 </div>
+
                                                 <div class=" col-md-6 form-group">
-                                                    <label for="exampleInputEmail1">iBank Account Type Rates (%)</label>
-                                                    <input type="text" name="acc_rates" readonly required class="form-control" id="AccountRates">
+                                                    <label for="exampleInputEmail1">Verification Document(Passport)</label>
+                                                    <input type="file" name="verification_id"  required class="form-control" id="verification_id" accept="image/*;capture=camera">
                                                 </div>
-
-                                                <div class=" col-md-6 form-group" style="display:none">
-                                                    <label for="exampleInputEmail1">iBank Account Status</label>
-                                                    <input type="text" name="acc_status" value="Active" readonly required class="form-control">
-                                                </div>
-
-                                                <div class=" col-md-6 form-group" style="display:none">
-                                                    <label for="exampleInputEmail1">iBank Account Amount</label>
-                                                    <input type="text" name="acc_amount" value="0" readonly required class="form-control">
-                                                </div>
-
-                                            </div>
-                                            <div class="row">
+                                                
                                                 <div class=" col-md-6 form-group">
-                                                    <label for="exampleInputEmail1">iBank Account Name</label>
+                                                    <label for="exampleInputEmail1">Bank Account Name</label>
                                                     <input type="text" name="acc_name" required class="form-control" id="exampleInputEmail1">
-                                                </div>
-
-                                                <div class=" col-md-6 form-group">
-                                                    <label for="exampleInputEmail1">iBank Account Number</label>
-                                                    <?php
-                                                    //PHP function to generate random account number
-                                                    $length = 12;
-                                                    $_accnumber =  substr(str_shuffle('0123456789'), 1, $length);
-                                                    ?>
-                                                    <input type="text" name="account_number" value="<?php echo $_accnumber; ?>" required class="form-control" id="exampleInputEmail1">
                                                 </div>
                                             </div>
                                         </div>

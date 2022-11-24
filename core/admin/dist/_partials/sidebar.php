@@ -217,7 +217,7 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-receipt"></i>
               <p>
-                   iBanking Statements
+                   leawoodcu Statements
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>

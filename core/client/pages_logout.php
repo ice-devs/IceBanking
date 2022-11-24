@@ -3,5 +3,5 @@
     unset($_SESSION['client_id']);
     session_destroy();
 
-    header("Location: pages_client_index.php");
+    header("Location: sign_in.php");
     exit;

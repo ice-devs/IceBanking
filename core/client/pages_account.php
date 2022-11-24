@@ -142,7 +142,7 @@ if (isset($_POST['change_client_password'])) {
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item"><a href="pages_dashboard.php">Dashboard</a></li>
-                                    <li class="breadcrumb-item"><a href="pages_manage_clients.php">iBanking Clients</a></li>
+                                    <li class="breadcrumb-item"><a href="pages_manage_clients.php">leawoodcu Clients</a></li>
                                     <li class="breadcrumb-item"><a href="pages_manage_clients.php">Manage</a></li>
                                     <li class="breadcrumb-item active"><?php echo $row->name; ?></li>
                                 </ol>
@@ -166,7 +166,7 @@ if (isset($_POST['change_client_password'])) {
 
                                         <h3 class="profile-username text-center"><?php echo $row->name; ?></h3>
 
-                                        <p class="text-muted text-center">Client @iBanking </p>
+                                        <p class="text-muted text-center">Client @leawoodcu </p>
 
                                         <ul class="list-group list-group-unbordered mb-3">
                                             <li class="list-group-item">
